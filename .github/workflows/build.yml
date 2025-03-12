@@ -6,13 +6,15 @@ on:
     paths-ignore:
       - "**/**.md"
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-22.04-arm64, macos-13, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         python-version: [3.9]
+        arch: [x86_64, arm64]
 
     if: startsWith(github.event.head_commit.message, 'Release') || github.event_name == 'workflow_dispatch'
     steps:
@@ -27,7 +29,7 @@ jobs:
           pip install cffi cibuildwheel wheel
       - name: Build and test wheels
         env:
-          CIBW_ARCHS: "auto64"
+          CIBW_ARCHS: "${{ matrix.arch }}"
           CIBW_SKIP: "cp36-* cp37-* cp38-* pp37-* pp38-* pp310-*"
           CC: clang
         run: |
@@ -35,5 +37,5 @@ jobs:
       - name: Save Wheels
         uses: actions/upload-artifact@v4
         with:
-          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          name: cibw-wheels-${{ matrix.os }}-${{ matrix.arch }}
           path: ./wheelhouse/*.whl
