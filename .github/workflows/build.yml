@@ -33,7 +33,7 @@ jobs:
       - name: Build and test wheels
         env:
           CIBW_ARCHS: "auto64"
-          CIBW_SKIP: "cp36-* cp37-* cp38-* pp37-* pp38-* pp39-win* cp39-win* pp313-* cp313-*"
+          CIBW_SKIP: "cp36-* cp37-* cp38-* pp37-* pp38-* pp39-win* cp39-win* pp311-win_amd64 pp313-* cp313-*"
           CC: clang
         run: |
           python -m cibuildwheel --output-dir wheelhouse
